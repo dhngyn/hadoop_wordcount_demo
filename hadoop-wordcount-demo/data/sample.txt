@@ -1,0 +1,6 @@
+Hadoop là một khung xử lý dữ liệu lớn mã nguồn mở.
+Hadoop gồm hai thành phần lõi là HDFS và MapReduce.
+HDFS lưu dữ liệu thành các khối, mỗi khối có nhiều bản sao.
+MapReduce xử lý dữ liệu theo hai pha: pha Map và pha Reduce.
+Big data is data whose size is beyond the ability of typical database tools.
+Hadoop stores big data in HDFS and processes big data with MapReduce.

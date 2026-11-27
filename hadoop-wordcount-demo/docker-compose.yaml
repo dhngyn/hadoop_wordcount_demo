@@ -1,0 +1,46 @@
+# Cụm Hadoop 4 container để chạy demo WordCount.
+# Dựa trên tệp docker-compose.yaml chính thức của Apache Hadoop
+# (nhánh docker-hadoop-3: https://github.com/apache/hadoop/tree/docker-hadoop-3),
+# thay "build: ." bằng image dựng sẵn trên Docker Hub và gắn thêm thư mục
+# src/, data/, scripts/ vào container resourcemanager để gửi job.
+
+services:
+  namenode:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64   # image chỉ có bản amd64; máy Mac chip Apple chạy qua giả lập
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    ports:
+      - 9870:9870          # Giao diện web của NameNode (HDFS)
+    env_file:
+      - ./config
+    environment:
+      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+
+  datanode:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64   # image chỉ có bản amd64; máy Mac chip Apple chạy qua giả lập
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./config
+
+  resourcemanager:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64   # image chỉ có bản amd64; máy Mac chip Apple chạy qua giả lập
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - 8088:8088          # Giao diện web của ResourceManager (YARN)
+    env_file:
+      - ./config
+    volumes:
+      - ./src:/opt/demo/src
+      - ./data:/opt/demo/data
+      - ./scripts:/opt/demo/scripts
+
+  nodemanager:
+    image: apache/hadoop:3.4.1
+    platform: linux/amd64   # image chỉ có bản amd64; máy Mac chip Apple chạy qua giả lập
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config
